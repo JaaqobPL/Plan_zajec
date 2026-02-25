@@ -1,0 +1,337 @@
+{
+  "przedmioty": {
+
+    "matematyka_c1": {
+      "nazwa": "Ćw. Matematyka",
+      "wykladowca": "(dr. inż.) Gertruda Gwóźdź",
+      "sala": "E105",
+      "kolor": "#2563eb", 
+      "link": "#"
+    },
+
+    "matematyka_c2": {
+      "nazwa": "Ćw. Matematyka",
+      "wykladowca": "(dr. inż.) Gertruda Gwóźdź",
+      "sala": "E103",
+      "kolor": "#2563eb", 
+      "link": "#"
+    },
+
+    "matematyka_w": {
+      "nazwa": "W. Matematyka",
+      "wykladowca": "(dr. inż.) Gertruda Gwóźdź",
+      "sala": "E5",
+      "kolor": "#dc2626",
+      "link": "#"
+    },
+    
+    "elektronika_l1": {
+      "nazwa": "L. Elektronika",
+      "wykladowca": "(dr. inż.) M Jankowski",
+      "sala": "k22 B18 l.c",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "elektronika_l2": {
+      "nazwa": "L. Elektronika",
+      "wykladowca": "(Mgr. inż.) P Niedzielski",
+      "sala": "k23 C3 309 enika",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "elektronika_w": {
+      "nazwa": "W. Elektronika",
+      "wykladowca": "(dr. inż.) T Widerski",
+      "sala": "E5",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Elektrotechnika_l": {
+      "nazwa": "L. Elektrotechnika",
+      "wykladowca": "(dr. inż.) E Stano",
+      "sala": "i25 ZPiKE 1",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Elektrotechnika_c": {
+      "nazwa": "Ćw. Elektrotechnika",
+      "wykladowca": "(Prof. dr.) E Leśniewska-Komęza",
+      "sala": "E104",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Elektrotechnika_w": {
+      "nazwa": "W. Elektrotechnika",
+      "wykladowca": "(Prof. dr.) E Leśniewska-Komęza",
+      "sala": "E5",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Fizyka_l": {
+      "nazwa": "L. Fizyka",
+      "wykladowca": "(dr. inż.) Krystyna Wolf",
+      "sala": "A3 S9",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Wytrzymałość_materiałów_c": {
+      "nazwa": "Ćw. Wytrzymałość materiałów",
+      "wykladowca": "(Prof. dr.) M Kotełko",
+      "sala": "E104",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Wytrzymałość_materiałów_w": {
+      "nazwa": "W. Wytrzymałość materiałów",
+      "wykladowca": "(Prof. dr.) M Kotełko",
+      "sala": "E5",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Inżynieria_wytwarzania_w_elektronice_w": {
+      "nazwa": "W. Inżynieria wytwarzania w elektronice",
+      "wykladowca": "(dr. inż.) A Kubiak",
+      "sala": "i23 416",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Inżynieria_wytwarzania_w_elektronice_l": {
+      "nazwa": "L. Inżynieria wytwarzania w elektronice",
+      "wykladowca": "(dr. inż.) Łukasz Ruta",
+      "sala": "k23 E7L",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Angielki": {
+      "nazwa": "Lek. J. Angielski",
+      "wykladowca": "(dr. inż.)",
+      "sala": "B24",
+      "kolor": "#2563eb",
+      "link": "#"
+    },
+
+    "WF": {
+      "nazwa": "WF",
+      "wykladowca": "(dr. inż.)",
+      "sala": "S3",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Technologie_informatyczne_l1": {
+      "nazwa": "L. Technologie informatyczne",
+      "wykladowca": "(dr. inż.) N Bokla",
+      "sala": "k23 C3 301 PC",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Technologie_informatyczne_l2": {
+      "nazwa": "L. Technologie informatyczne",
+      "wykladowca": "(dr. inż.) M Ludwicki",
+      "sala": "m A22b 2M135",
+      "kolor": "#b91c1c",
+      "link": "#"
+    },
+
+    "Technologie_informatyczne_e": {
+      "nazwa": "e_ler. Technologie informatyczne",
+      "wykladowca": "(dr.) M Kacperski",
+      "sala": "e_lerning",
+      "kolor": "#b91c1c",
+      "link": "#"
+    }
+  },
+
+  "plan": [
+    {
+      "dzien": 1,
+      "tygodnie": "oba",
+      "od": "08:15",
+      "do": "10:00",
+      "id_przedmiotu": "Wytrzymałość_materiałów_c"
+    },
+
+    {
+      "dzien": 1,
+      "tygodnie": "x2",
+      "od": "10:15",
+      "do": "12:00",
+      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_l"
+    },
+
+    {
+      "dzien": 1,
+      "tygodnie": "1 połowa",
+      "od": "12:15",
+      "do": "14:00",
+      "id_przedmiotu": "Wytrzymałość_materiałów_w"
+    },
+
+    {
+      "dzien": 1,
+      "tygodnie": "1 połowa",
+      "od": "14:15",
+      "do": "16:00",
+      "id_przedmiotu": "elektronika_w"
+    },
+
+    {
+      "dzien": 1,
+      "tygodnie": "oba",
+      "od": "19:15",
+      "do": "20:00",
+      "id_przedmiotu": "Technologie_informatyczne_e"
+    },
+
+
+
+
+
+
+
+    {
+      "dzien": 2,
+      "tygodnie": "1 połowa",
+      "od": "08:15",
+      "do": "10:00",
+      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_w"
+    },
+    {
+      "dzien": 2,
+      "tygodnie": "oba",
+      "od": "10:15",
+      "do": "12:00",
+      "id_przedmiotu": "Angielki"
+    },
+
+    {
+      "dzien": 2,
+      "tygodnie": "2 połowa",
+      "od": "14:15",
+      "do": "16:00",
+      "id_przedmiotu": "elektronika_l1"
+    },
+
+    {
+      "dzien": 2,
+      "tygodnie": "2 połowa",
+      "od": "16:15",
+      "do": "18:00",
+      "id_przedmiotu": "Fizyka_l"
+    },
+    
+
+    {
+      "dzien": 3,
+      "tygodnie": "oba",
+      "od": "08:15",
+      "do": "10:00",
+      "id_przedmiotu": "matematyka_w"
+    },
+
+    {
+      "dzien": 3,
+      "tygodnie": "oba",
+      "od": "10:15",
+      "do": "12:00",
+      "id_przedmiotu": "Elektrotechnika_w"
+    },
+
+    {
+      "dzien": 3,
+      "tygodnie": "1 połowa",
+      "od": "12:15",
+      "do": "14:00",
+      "id_przedmiotu": "Elektrotechnika_l"
+    },
+
+    {
+      "dzien": 3,
+      "tygodnie": "1, 2, 4-15",
+      "od": "14:15",
+      "do": "16:00",
+      "id_przedmiotu": "matematyka_c2"
+    },
+
+
+
+    {
+      "dzien": 4,
+      "tygodnie": "x2",
+      "od": "08:15",
+      "do": "10:00",
+      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_l"
+    },
+
+    {
+      "dzien": 4,
+      "tygodnie": "1, 2, 4-15",
+      "od": "10:15",
+      "do": "12:00",
+      "id_przedmiotu": "Elektrotechnika_c"
+    },
+
+    {
+      "dzien": 4,
+      "tygodnie": "oba",
+      "od": "12:15",
+      "do": "14:00",
+      "id_przedmiotu": "matematyka_c1"
+    },
+
+    {
+      "dzien": 4,
+      "tygodnie": "oba",
+      "od": "14:00",
+      "do": "15:30",
+      "id_przedmiotu": "WF"
+    },
+
+    {
+      "dzien": 4,
+      "tygodnie": "1,2",
+      "od": "18:15",
+      "do": "20:00",
+      "id_przedmiotu": "matematyka_w"
+    },
+
+
+
+    {
+      "dzien": 5,
+      "tygodnie": "2-9",
+      "od": "08:15",
+      "do": "10:00",
+      "id_przedmiotu": "Technologie_informatyczne_l1"
+    },
+
+    {
+      "dzien": 5,
+      "tygodnie": "10-15",
+      "od": "8:30",
+      "do": "10:00",
+      "id_przedmiotu": "Technologie_informatyczne_l2"
+    },
+
+    {
+      "dzien": 5,
+      "tygodnie": "oba",
+      "od": "14:15",
+      "do": "16:00",
+      "id_przedmiotu": "elektronika_l2"
+    }
+
+  ]
+}

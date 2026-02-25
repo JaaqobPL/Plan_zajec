@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mój Inteligentny Plan Zajęć</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Space Grotesk', sans-serif; background-color: #e0e0e0; margin: 0; display: flex; justify-content: center; }
+  .phone-container { width: 100%; max-width: 400px; background-color: white; min-height: 100vh; padding: 20px; box-sizing: border-box; position: relative; }
+  
+  .header { 
+    background: rgba(165, 165, 165, 0.20); 
+    border-radius: 12px; 
+    padding: 10px 5px; 
+    margin-bottom: 24px; 
+    margin-top: 10px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-text { text-align: center; flex-grow: 1; }
+  .day-title { color: black; font-size: 26px; margin: 0; font-weight: bold; }
+  .date-text { font-size: 15px; color: #333; margin-top: 4px; font-weight: bold; }
+  .week-info { font-size: 13px; color: #666; margin-top: 4px; }
+  
+  .nav-btn {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #444;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: 0.2s;
+  }
+  .nav-btn:hover { background: rgba(0,0,0,0.1); }
+  .nav-btn:active { transform: scale(0.9); }
+
+  .card { border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-direction: column; color: white; text-decoration: none; transition: 0.3s; }
+  .card.active { outline: 4px solid #2e7d32; box-shadow: 0 0 20px rgba(46, 125, 50, 0.6); transform: scale(1.02); }
+  .przedmiot { text-align: center; font-size: 28px; line-height: 1.2; margin-bottom: 2px; }
+  .wykladowca { text-align: center; font-size: 17px; opacity: 0.9; margin-bottom: 16px; }
+  .bottom-row { display: flex; justify-content: space-between; align-items: flex-end; }
+  .godzina { font-size: 21px; }
+  .sala { font-size: 31px; line-height: 0.9; }
+  .okienko { text-align: center; padding: 10px; margin-bottom: 12px; background: rgba(0,0,0,0.03); border-radius: 8px; color: #555; font-size: 14px; font-weight: bold; border: 2px dashed #bbb; }
+  #komunikat { text-align: center; font-size: 18px; color: #727272; margin-top: 50px; }
+  .error { color: #d32f2f !important; }
+</style>
+</head>
+<body>
+
+<div class="phone-container">
+  <div class="header">
+    <button class="nav-btn" id="prev-day">❮</button>
+    <div class="header-text">
+      <h1 class="day-title" id="tytul-dnia">Ładowanie...</h1>
+      <div class="date-text" id="data-dnia"></div>
+      <div class="week-info" id="info-tygodnia"></div>
+    </div>
+    <button class="nav-btn" id="next-day">❯</button>
+  </div>
+
+  <div id="plan-container"></div>
+  <div id="komunikat">Pobieranie planu...</div>
+</div>
+
+<script>
+  let bazaDanych = null; 
+  let aktualnaDataWyswietlania = new Date();
+
+  const nazwyDni = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
+  const miesiace = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
+  
+  const tablicaTygodni = [
+    { t: 1,  d1: "02.03", d2: "03.03", d3: "04.03", d4: "05.03", d5: "06.03" },
+    { t: 2,  d1: "09.03", d2: "10.03", d3: "11.03", d4: "12.03", d5: "13.03" },
+    { t: 3,  d1: "16.03", d2: "17.03", d3: "18.03", d4: "19.03", d5: "20.03" },
+    { t: 4,  d1: "23.03", d2: "24.03", d3: "25.03", d4: "26.03", d5: "27.03" },
+    { t: 5,  d1: "30.03", d2: "07.04", d3: "08.04", d4: "31.03", d5: "01.04" },
+    { t: 6,  d1: "13.04", d2: "21.04", d3: "15.04", d4: "09.04", d5: "10.04" },
+    { t: 7,  d1: "20.04", d2: "28.04", d3: "22.04", d4: "16.04", d5: "17.04" },
+    { t: 8,  d1: "04.05", d2: "05.05", d3: "29.04", d4: "23.04", d5: "24.04" },
+    { t: 9,  d1: "11.05", d2: "12.05", d3: "06.05", d4: "30.04", d5: "27.04" }, 
+    { t: 10, d1: "18.05", d2: "19.05", d3: "13.05", d4: "07.05", d5: "08.05" },
+    { t: 11, d1: "25.05", d2: "26.05", d3: "20.05", d4: "14.05", d5: "15.05" },
+    { t: 12, d1: "01.06", d2: "02.06", d3: "27.05", d4: "21.05", d5: "22.05" },
+    { t: 13, d1: "08.06", d2: "09.06", d3: "03.06", d4: "28.05", d5: "29.05" },
+    { t: 14, d1: "15.06", d2: "16.06", d3: "10.06", d4: "11.06", d5: "12.06" },
+    { t: 15, d1: "22.06", d2: "23.06", d3: "17.06", d4: "18.06", d5: "19.06" }
+  ];
+
+  const kalendarzMap = {};
+  tablicaTygodni.forEach(tydz => {
+    if(tydz.d1) kalendarzMap[tydz.d1] = { dzienWPlanie: 1, tydzien: tydz.t };
+    if(tydz.d2) kalendarzMap[tydz.d2] = { dzienWPlanie: 2, tydzien: tydz.t };
+    if(tydz.d3) kalendarzMap[tydz.d3] = { dzienWPlanie: 3, tydzien: tydz.t };
+    if(tydz.d4) kalendarzMap[tydz.d4] = { dzienWPlanie: 4, tydzien: tydz.t };
+    if(tydz.d5) kalendarzMap[tydz.d5] = { dzienWPlanie: 5, tydzien: tydz.t };
+  });
+
+  // DO TESTÓW (usuń w marcu):
+  kalendarzMap["25.02"] = { dzienWPlanie: 3, tydzien: 1 };
+  kalendarzMap["26.02"] = { dzienWPlanie: 4, tydzien: 1 };
+  kalendarzMap["27.02"] = { dzienWPlanie: 5, tydzien: 1 };
+
+  function pasujeDoTygodnia(zapisZJsona, obecnyTydzien) {
+    if (!zapisZJsona || zapisZJsona === "oba" || zapisZJsona === "wszystkie") return true;
+    const fragmenty = zapisZJsona.toString().toLowerCase().split(',').map(s => s.trim());
+    let maZakresyLiczbowe = false;
+    let dopuszczalneLiczby = [];
+    
+    for (const frag of fragmenty) {
+      if (/^[0-9]+(-[0-9]+)?$/.test(frag)) {
+        maZakresyLiczbowe = true;
+        if (frag.includes('-')) {
+          const [odT, doT] = frag.split('-').map(Number);
+          for (let i = odT; i <= doT; i++) dopuszczalneLiczby.push(i);
+        } else {
+          dopuszczalneLiczby.push(Number(frag));
+        }
+      }
+    }
+    
+    if (maZakresyLiczbowe && !dopuszczalneLiczby.includes(obecnyTydzien)) return false; 
+    
+    for (const frag of fragmenty) {
+      if ((frag === "x1" || frag === "nieparzyste") && obecnyTydzien % 2 === 0) return false;
+      if ((frag === "x2" || frag === "parzyste" || frag === "pażyste") && obecnyTydzien % 2 !== 0) return false;
+      if ((frag === "1 połowa" || frag === "1 polowa") && obecnyTydzien > 8) return false;
+      if ((frag === "2 połowa" || frag === "2 polowa") && obecnyTydzien < 9) return false;
+    }
+    return true; 
+  }
+
+  // AUTOMATYCZNY FORMATER GODZIN (Dodaje zero z przodu, jeśli brakuje)
+  function formatCzasu(czas) {
+    let [godzina, minuty] = czas.split(':');
+    return `${godzina.padStart(2, '0')}:${minuty}`;
+  }
+
+  // OBSŁUGA STRZAŁEK
+  document.getElementById("prev-day").addEventListener("click", () => {
+    aktualnaDataWyswietlania.setDate(aktualnaDataWyswietlania.getDate() - 1);
+    renderPlan();
+  });
+
+  document.getElementById("next-day").addEventListener("click", () => {
+    aktualnaDataWyswietlania.setDate(aktualnaDataWyswietlania.getDate() + 1);
+    renderPlan();
+  });
+
+  async function pobierzPlan() {
+    try {
+      const odpowiedz = await fetch('plan.json');
+      if (!odpowiedz.ok) throw new Error("Nie znaleziono pliku");
+      bazaDanych = await odpowiedz.json();
+      renderPlan(); 
+    } catch (blad) {
+      document.getElementById("komunikat").innerHTML = "Błąd wczytywania planu (Pamiętaj o serwerze / CORS).";
+      document.getElementById("komunikat").classList.add("error");
+    }
+  }
+
+  function renderPlan() {
+    if (!bazaDanych) return; 
+
+    const kontener = document.getElementById("plan-container");
+    const komunikat = document.getElementById("komunikat");
+    kontener.innerHTML = ""; 
+
+    const dataTekst = `${aktualnaDataWyswietlania.getDate()} ${miesiace[aktualnaDataWyswietlania.getMonth()]} ${aktualnaDataWyswietlania.getFullYear()}`;
+    document.getElementById("data-dnia").innerText = dataTekst;
+
+    const dd = String(aktualnaDataWyswietlania.getDate()).padStart(2, '0');
+    const mm = String(aktualnaDataWyswietlania.getMonth() + 1).padStart(2, '0');
+    const dataStr = `${dd}.${mm}`; 
+
+    const infoAkademickie = kalendarzMap[dataStr] || null;
+
+    if (!infoAkademickie) {
+      document.getElementById("tytul-dnia").innerText = nazwyDni[aktualnaDataWyswietlania.getDay()];
+      document.getElementById("info-tygodnia").innerText = "Brak zajęć dydaktycznych";
+      komunikat.style.display = "block";
+      komunikat.innerText = "Idź odpocząć, w ten dzień uczelnia nie działa! 🎉";
+      return;
+    }
+
+    const prawdziweDzisiaj = new Date();
+    const czyToDzisiaj = (prawdziweDzisiaj.getDate() === aktualnaDataWyswietlania.getDate() && 
+                          prawdziweDzisiaj.getMonth() === aktualnaDataWyswietlania.getMonth() && 
+                          prawdziweDzisiaj.getFullYear() === aktualnaDataWyswietlania.getFullYear());
+    const aktualnyCzas = prawdziweDzisiaj.getHours() * 60 + prawdziweDzisiaj.getMinutes();
+
+    const nazwaPrawdziwegoDnia = nazwyDni[aktualnaDataWyswietlania.getDay()];
+    const nazwaZPlanu = nazwyDni[infoAkademickie.dzienWPlanie];
+    
+    document.getElementById("tytul-dnia").innerText = nazwaPrawdziwegoDnia !== nazwaZPlanu 
+      ? `${nazwaPrawdziwegoDnia} (jako: ${nazwaZPlanu})` 
+      : nazwaZPlanu;
+      
+    const rodzajTyg = infoAkademickie.tydzien % 2 === 0 ? "x2" : "x1";
+    const polowaTyg = infoAkademickie.tydzien <= 8 ? "1 połowa" : "2 połowa";
+    document.getElementById("info-tygodnia").innerText = `Tydzień: ${infoAkademickie.tydzien} z 15 (${rodzajTyg}, ${polowaTyg})`;
+    
+    const dzisiejszeZajecia = bazaDanych.plan.filter(zajecie => {
+      const pasujeDzien = zajecie.dzien === infoAkademickie.dzienWPlanie;
+      const pasujeTydzien = pasujeDoTygodnia(zajecie.tygodnie, infoAkademickie.tydzien);
+      return pasujeDzien && pasujeTydzien;
+    });
+
+    if (dzisiejszeZajecia.length === 0) {
+      komunikat.style.display = "block";
+      komunikat.innerText = "Nie masz zajęć w ten dzień. Looz!";
+      return;
+    } else {
+      komunikat.style.display = "none";
+    }
+
+    dzisiejszeZajecia.sort((a, b) => {
+      const minutyA = parseInt(a.od.split(":")[0]) * 60 + parseInt(a.od.split(":")[1]);
+      const minutyB = parseInt(b.od.split(":")[0]) * 60 + parseInt(b.od.split(":")[1]);
+      return minutyA - minutyB;
+    });
+
+    let koniecPoprzednichZajec = null;
+
+    dzisiejszeZajecia.forEach(zajecie => {
+      const infoPrzedmiotu = bazaDanych.przedmioty[zajecie.id_przedmiotu];
+      if(!infoPrzedmiotu) return; 
+
+      const czasOd = parseInt(zajecie.od.split(":")[0]) * 60 + parseInt(zajecie.od.split(":")[1]);
+      const czasDo = parseInt(zajecie.do.split(":")[0]) * 60 + parseInt(zajecie.do.split(":")[1]);
+
+      if (koniecPoprzednichZajec !== null) {
+        const roznicaMinut = czasOd - koniecPoprzednichZajec;
+        if (roznicaMinut > 15) {
+          const godziny = Math.floor(roznicaMinut / 60);
+          const minuty = roznicaMinut % 60;
+          let tekstOkienka = "☕ Okienko: ";
+          if (godziny > 0) tekstOkienka += `${godziny}h `;
+          if (minuty > 0) tekstOkienka += `${minuty}min`;
+
+          const okienkoDiv = document.createElement("div");
+          okienkoDiv.className = "okienko";
+          okienkoDiv.innerText = tekstOkienka;
+          kontener.appendChild(okienkoDiv);
+        }
+      }
+      koniecPoprzednichZajec = czasDo; 
+
+      let isActive = (czyToDzisiaj && aktualnyCzas >= czasOd && aktualnyCzas <= czasDo);
+
+      const elementKarty = document.createElement(infoPrzedmiotu.link !== "#" ? "a" : "div");
+      if(infoPrzedmiotu.link !== "#") {
+        elementKarty.href = infoPrzedmiotu.link;
+        elementKarty.target = "_blank";
+      }
+      
+      elementKarty.className = "card" + (isActive ? " active" : "");
+      elementKarty.style.backgroundColor = infoPrzedmiotu.kolor || "#727272";
+      
+      // Tutaj używamy naszego automatycznego formatera czasu!
+      const wyswietlanyCzas = `${formatCzasu(zajecie.od)} - ${formatCzasu(zajecie.do)}`;
+      
+      elementKarty.innerHTML = `
+        <div class="przedmiot">${infoPrzedmiotu.nazwa}</div>
+        <div class="wykladowca">${infoPrzedmiotu.wykladowca}</div>
+        <div class="bottom-row">
+          <div class="godzina">${wyswietlanyCzas}</div>
+          <div class="sala">${infoPrzedmiotu.sala}</div>
+        </div>
+      `;
+      kontener.appendChild(elementKarty);
+    });
+  }
+
+  pobierzPlan();
+  
+  setInterval(() => {
+    const dzisiaj = new Date();
+    if(dzisiaj.getDate() === aktualnaDataWyswietlania.getDate()) {
+      renderPlan();
+    }
+  }, 60000);
+
+</script>
+</body>
+</html>
