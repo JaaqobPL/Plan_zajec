@@ -183,7 +183,7 @@
       document.getElementById("tytul-dnia").innerText = nazwyDni[aktualnaDataWyswietlania.getDay()];
       document.getElementById("info-tygodnia").innerText = "Brak zajęć dydaktycznych";
       komunikat.style.display = "block";
-      komunikat.innerText = "Idź odpocząć, w ten dzień uczelnia nie działa! 🎉";
+      komunikat.innerText = "Brak Zajęć";
       return;
     }
 
@@ -238,7 +238,7 @@
         if (roznicaMinut > 15) {
           const godziny = Math.floor(roznicaMinut / 60);
           const minuty = roznicaMinut % 60;
-          let tekstOkienka = "☕ Okienko: ";
+          let tekstOkienka = "Okienko:";
           if (godziny > 0) tekstOkienka += `${godziny}h `;
           if (minuty > 0) tekstOkienka += `${minuty}min`;
 
@@ -287,4 +287,5 @@
 
 </script>
 </body>
+
 </html>
