@@ -3,14 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mój Plan Zajęć</title>
+<title>Plan Zajęć</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2e7d32">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body { font-family: 'Space Grotesk', sans-serif; background: #e0e0e0; margin: 0; display: flex; justify-content: center; }
   .app { width: 100%; max-width: 400px; background: white; min-height: 100vh; padding: 20px; box-sizing: border-box; }
   
   .header { background: rgba(165,165,165,0.2); border-radius: 12px; padding: 10px 5px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
-  .text-center { text-align: center; flex-grow: 1; }
+  .text-center { text-align: center; flex-grow: 1; cursor: pointer; border-radius: 8px; padding: 5px; transition: 0.2s; }
+  .text-center:hover { background: rgba(0,0,0,0.05); }
   .title { font-size: 26px; margin: 0; color: #000; }
   .date { font-size: 15px; color: #333; margin-top: 4px; font-weight: bold; }
   .week { font-size: 13px; color: #666; margin-top: 4px; }
@@ -28,21 +34,42 @@
   
   .okienko { text-align: center; padding: 10px; margin-bottom: 12px; background: rgba(0,0,0,0.03); border-radius: 8px; color: #555; font-size: 14px; font-weight: bold; border: 2px dashed #bbb; }
   .msg { text-align: center; font-size: 18px; color: #727272; margin-top: 50px; display: none; }
+
+  /* --- STYLE DLA WYSKAKUJĄCEGO OKIENKA (MODAL) --- */
+  .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+  .modal-content { background: white; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; max-height: 85vh; overflow-y: auto; position: relative; box-sizing: border-box; }
+  .close { position: absolute; right: 15px; top: 10px; font-size: 32px; cursor: pointer; color: #555; line-height: 1; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; text-align: center; }
+  th, td { border: 1px solid #ddd; padding: 6px 2px; }
+  th { background: #f0f0f0; }
+  .t-x1 { background: #fff; }
+  .t-x2 { background: #f4f4f4; }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
     <button class="btn" id="prev">❮</button>
-    <div class="text-center">
+    <div class="text-center" id="open-modal">
       <h1 class="title" id="tytul"></h1>
       <div class="date" id="data"></div>
       <div class="week" id="info"></div>
+      <div style="font-size: 10px; color: #aaa; margin-top: 3px;">(Kliknij po kalendarz)</div>
     </div>
     <button class="btn" id="next">❯</button>
   </div>
   <div id="plan-container"></div>
   <div id="komunikat" class="msg"></div>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close-modal">&times;</span>
+    <h2 style="margin: 0 0 5px 0; font-size: 20px;">Rozpiska Semestru</h2>
+    <div style="overflow-x: auto;">
+      <table id="tabela-tygodni"></table>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -52,9 +79,8 @@
   const nazwyDni = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
   const miesiace = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
   
-  // tablica tygodni (dni od poniedziałku do piątku)
-  const kalendarzMap = {};
-  [
+  // Rozpiska z Twojego zdjęcia
+  const tygodnieDane = [
     ["02.03","03.03","04.03","05.03","06.03"], ["09.03","10.03","11.03","12.03","13.03"],
     ["16.03","17.03","18.03","19.03","20.03"], ["23.03","24.03","25.03","26.03","27.03"],
     ["30.03","07.04","08.04","31.03","01.04"], ["13.04","21.04","15.04","09.04","10.04"],
@@ -63,13 +89,17 @@
     ["25.05","26.05","20.05","14.05","15.05"], ["01.06","02.06","27.05","21.05","22.05"],
     ["08.06","09.06","03.06","28.05","29.05"], ["15.06","16.06","10.06","11.06","12.06"],
     ["22.06","23.06","17.06","18.06","19.06"]
-  ].forEach((tydz, index) => {
+  ];
+
+  const kalendarzMap = {};
+  tygodnieDane.forEach((tydz, index) => {
     tydz.forEach((data, i) => kalendarzMap[data] = { dzienWPlanie: i + 1, tydzien: index + 1 });
   });
 
+  // DO TESTÓW (Zostawiłem na dzisiaj):
   kalendarzMap["27.02"] = { dzienWPlanie: 5, tydzien: 1 };
 
-  // filtr tygodni
+  // Filtr tygodni
   function pasuje(zapis, aktTyg) {
     if (!zapis || zapis === "oba") return true;
     const z = zapis.toLowerCase();
@@ -87,6 +117,30 @@
     
     return true; 
   }
+
+  // --- LOGIKA OKIENKA (MODAL) ---
+  const modal = document.getElementById("modal");
+  document.getElementById("open-modal").onclick = () => {
+    modal.style.display = "flex";
+    const tab = document.getElementById("tabela-tygodni");
+    if (!tab.innerHTML) { // Rysuj tabelę tylko raz
+      let html = "<tr><th>Tyg</th><th>Pon</th><th>Wt</th><th>Śr</th><th>Czw</th><th>Pt</th></tr>";
+      tygodnieDane.forEach((tydz, i) => {
+        const t = i + 1;
+        const klasa = t % 2 === 0 ? "t-x2" : "t-x1";
+        const polowa = t <= 8 ? "1 poł." : "2 poł.";
+        const typ = t % 2 === 0 ? "x2" : "x1";
+        html += `<tr class="${klasa}">
+          <td><b>t${t}</b><br><small style="color:#555">${typ}</small><br><small style="color:#777">${polowa}</small></td>
+          <td>${tydz[0]}</td><td>${tydz[1]}</td><td>${tydz[2]}</td><td>${tydz[3]}</td><td>${tydz[4]}</td>
+        </tr>`;
+      });
+      tab.innerHTML = html;
+    }
+  };
+  document.getElementById("close-modal").onclick = () => modal.style.display = "none";
+  window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
+  // ------------------------------
 
   // Nawigacja
   document.getElementById("prev").onclick = () => { dataWysw.setDate(dataWysw.getDate() - 1); render(); };
@@ -129,7 +183,7 @@
     document.getElementById("info").innerText = `Tyg: ${info.tydzien}/15 (${info.tydzien % 2 === 0 ? "x2" : "x1"}, ${info.tydzien <= 8 ? "1 poł." : "2 poł."})`;
 
     let zajeciaDnia = baza.plan.filter(z => z.dzien === info.dzienWPlanie && pasuje(z.tygodnie, info.tydzien));
-    if (!zajeciaDnia.length) { msg.style.display = "block"; msg.innerText = "Nie masz zajęć w ten dzień. Looz!"; return; }
+    if (!zajeciaDnia.length) { msg.style.display = "block"; msg.innerText = "Brak zajęć!"; return; }
 
     zajeciaDnia.sort((a, b) => (parseInt(a.od.split(":")[0])*60 + parseInt(a.od.split(":")[1])) - (parseInt(b.od.split(":")[0])*60 + parseInt(b.od.split(":")[1])));
     let koniecPoprzednich = null;
@@ -143,7 +197,7 @@
 
       if (koniecPoprzednich !== null && (odMin - koniecPoprzednich) > 15) {
         const przerwa = odMin - koniecPoprzednich;
-        kontener.innerHTML += `<div class="okienko">☕ Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
+        kontener.innerHTML += `<div class="okienko"> Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
       }
       koniecPoprzednich = doMin;
 
@@ -165,5 +219,14 @@
   start();
   setInterval(() => { if (new Date().toDateString() === dataWysw.toDateString()) render(); }, 60000);
 </script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js');
+    });
+  }
+</script>
+
 </body>
 </html>
