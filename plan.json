@@ -83,7 +83,7 @@
 
     "Wytrzymałość_materiałów_c": {
       "nazwa": "Ćw. Wytrzymałość materiałów",
-      "wykladowca": "(Prof. dr.) M Kotełko",
+      "wykladowca": "(dr. inż.) Jacek Jankowski",
       "sala": "E104",
       "kolor": "#b91c1c",
       "link": "#"
@@ -334,4 +334,5 @@
     }
 
   ]
+
 }
