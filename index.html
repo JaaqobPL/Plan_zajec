@@ -15,22 +15,29 @@
   .app { width: 100%; max-width: 400px; background: white; min-height: 100vh; padding: 20px; box-sizing: border-box; }
   
   .header { background: rgba(165,165,165,0.2); border-radius: 12px; padding: 10px 5px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
-  .text-center { text-align: center; flex-grow: 1; cursor: pointer; border-radius: 8px; padding: 5px 0; transition: 0.2s; }
-  .text-center:hover { background: rgba(0,0,0,0.05); }
+  .text-center { text-align: center; flex-grow: 1; padding: 5px 0; }
   .title { font-size: 26px; margin: 0; color: #000; }
   .date { font-size: 15px; color: #333; margin-top: 4px; font-weight: bold; }
   .week { font-size: 13px; color: #666; margin-top: 4px; }
   
-  /* --- Nowa ikonka kalendarza --- */
-  .calendar-icon { margin-top: 6px; color: #888; transition: 0.2s; display: flex; justify-content: center; }
-  .text-center:hover .calendar-icon { color: #2e7d32; transform: scale(1.15); }
-  /* ------------------------------ */
+  /* --- Nowy panel ikonek --- */
+  .icons-row { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
+  .icon-action { color: #888; cursor: pointer; transition: 0.2s; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .icon-action:hover { background: rgba(0,0,0,0.05); color: #2e7d32; }
+  .icon-active { color: #2e7d32; background: rgba(46,125,50,0.1); }
+  /* ------------------------- */
 
   .btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 10px 15px; border-radius: 8px; transition: 0.2s; }
   .btn:hover { background: rgba(0,0,0,0.1); }
   
   .card { border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-direction: column; color: white; text-decoration: none; transition: 0.3s; }
   .card.active { outline: 4px solid #2e7d32; box-shadow: 0 0 20px rgba(46,125,50,0.6); transform: scale(1.02); }
+  
+  /* --- Wygląd szarych kart (duchów) --- */
+  .inactive-card { background: #555 !important; opacity: 0.65; border: 2px dashed #999; filter: grayscale(80%); box-shadow: none !important; transform: none !important; }
+  .inactive-badge { font-size: 11px; color: #ddd; text-align: center; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+  /* ------------------------------------ */
+
   .przedmiot { text-align: center; font-size: 28px; line-height: 1.2; font-weight: bold; }
   .wykladowca { text-align: center; font-size: 16px; opacity: 0.9; margin: 4px 0 16px; }
   .row { display: flex; justify-content: space-between; align-items: flex-end; }
@@ -40,7 +47,6 @@
   .okienko { text-align: center; padding: 10px; margin-bottom: 12px; background: rgba(0,0,0,0.03); border-radius: 8px; color: #555; font-size: 14px; font-weight: bold; border: 2px dashed #bbb; }
   .msg { text-align: center; font-size: 18px; color: #727272; margin-top: 50px; display: none; }
 
-  /* Wyskakujące okienko (Modal) */
   .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
   .modal-content { background: white; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; max-height: 85vh; overflow-y: auto; position: relative; box-sizing: border-box; }
   .close { position: absolute; right: 15px; top: 10px; font-size: 32px; cursor: pointer; color: #555; line-height: 1; }
@@ -55,21 +61,26 @@
 <div class="app">
   <div class="header">
     <button class="btn" id="prev">❮</button>
-    
-    <div class="text-center" id="open-modal" title="Pokaż rozpiskę semestru">
+    <div class="text-center">
       <h1 class="title" id="tytul"></h1>
       <div class="date" id="data"></div>
       <div class="week" id="info"></div>
-      <div class="calendar-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
+      
+      <div class="icons-row">
+        <div class="icon-action" id="open-modal" title="Pokaż rozpiskę semestru">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div class="icon-action" id="toggle-all" title="Pokaż wszystkie zajęcia przypisane do tego dnia">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </div>
       </div>
     </div>
-    
     <button class="btn" id="next">❯</button>
   </div>
   <div id="plan-container"></div>
@@ -90,6 +101,7 @@
 <script>
   let baza = null; 
   let dataWysw = new Date();
+  let pokazWszystkie = false; // Zmienna pamiętająca czy kliknięto oko
   
   const nazwyDni = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
   const miesiace = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
@@ -112,34 +124,32 @@
 
   function pasuje(zapis, aktTyg) {
     if (!zapis || zapis === "oba") return true;
-    
     const fragmenty = zapis.toLowerCase().split(',').map(s => s.trim());
-    let maZakresy = false;
-    let pasujeZakres = false;
-    
+    let maZakresy = false; let pasujeZakres = false;
     for (const frag of fragmenty) {
       if (/^\d+(-\d+)?$/.test(frag)) { 
         maZakresy = true;
         const [start, end] = frag.split('-').map(Number);
-        if (end ? (aktTyg >= start && aktTyg <= end) : (aktTyg === start)) {
-          pasujeZakres = true;
-        }
+        if (end ? (aktTyg >= start && aktTyg <= end) : (aktTyg === start)) pasujeZakres = true;
       }
     }
-    
     if (maZakresy && !pasujeZakres) return false;
-    
     for (const frag of fragmenty) {
       if ((frag === "x1" || frag === "nieparzyste") && aktTyg % 2 === 0) return false;
       if ((frag === "x2" || frag === "parzyste" || frag === "pażyste") && aktTyg % 2 !== 0) return false;
       if ((frag === "1 polowa" || frag === "1 połowa") && aktTyg > 8) return false;
       if ((frag === "2 polowa" || frag === "2 połowa") && aktTyg < 9) return false;
     }
-    
     return true; 
   }
 
-  // Obsługa modala
+  // Aktywacja Oka
+  document.getElementById("toggle-all").onclick = () => {
+    pokazWszystkie = !pokazWszystkie;
+    document.getElementById("toggle-all").classList.toggle("icon-active", pokazWszystkie);
+    render();
+  };
+
   const modal = document.getElementById("modal");
   document.getElementById("open-modal").onclick = () => {
     modal.style.display = "flex";
@@ -162,7 +172,6 @@
   document.getElementById("close-modal").onclick = () => modal.style.display = "none";
   window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
 
-  // Nawigacja
   document.getElementById("prev").onclick = () => { dataWysw.setDate(dataWysw.getDate() - 1); render(); };
   document.getElementById("next").onclick = () => { dataWysw.setDate(dataWysw.getDate() + 1); render(); };
 
@@ -186,52 +195,95 @@
     document.getElementById("data").innerText = `${dataWysw.getDate()} ${miesiace[dataWysw.getMonth()]} ${dataWysw.getFullYear()}`;
     const dzisiajStr = `${String(dataWysw.getDate()).padStart(2,'0')}.${String(dataWysw.getMonth()+1).padStart(2,'0')}`;
     const info = kalendarzMap[dzisiajStr];
-
-    if (!info) {
+    
+    // Jeśli dzień wolny i NIE kliknęliśmy oka
+    if (!info && !pokazWszystkie) {
       document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
       document.getElementById("info").innerText = "Brak zajęć dydaktycznych";
-      msg.style.display = "block"; msg.innerText = "Idź odpocząć, brak zajęć w ten dzień! 🎉"; return;
+      msg.style.display = "block"; msg.innerText = "Idź odpocząć, brak zajęć w ten dzień! 🎉"; 
+      return;
+    }
+
+    const dWPlanie = info ? info.dzienWPlanie : dataWysw.getDay();
+    
+    if (info) {
+      const nazwaPrawdziwa = nazwyDni[dataWysw.getDay()];
+      const nazwaZPlanu = nazwyDni[info.dzienWPlanie];
+      document.getElementById("tytul").innerText = nazwaPrawdziwa !== nazwaZPlanu ? `${nazwaPrawdziwa} (jako: ${nazwaZPlanu})` : nazwaZPlanu;
+      document.getElementById("info").innerText = `Tyg: ${info.tydzien}/15 (${info.tydzien % 2 === 0 ? "x2" : "x1"}, ${info.tydzien <= 8 ? "1 poł." : "2 poł."})`;
+    } else {
+      document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
+      document.getElementById("info").innerText = "Pokazuję opcje dla tego dnia tyg.";
     }
 
     const prawdziweDzisiaj = new Date();
     const czyToDzisiaj = prawdziweDzisiaj.toDateString() === dataWysw.toDateString();
     const minutyTeraz = prawdziweDzisiaj.getHours() * 60 + prawdziweDzisiaj.getMinutes();
 
-    const nazwaPrawdziwa = nazwyDni[dataWysw.getDay()];
-    const nazwaZPlanu = nazwyDni[info.dzienWPlanie];
-    document.getElementById("tytul").innerText = nazwaPrawdziwa !== nazwaZPlanu ? `${nazwaPrawdziwa} (jako: ${nazwaZPlanu})` : nazwaZPlanu;
-    document.getElementById("info").innerText = `Tyg: ${info.tydzien}/15 (${info.tydzien % 2 === 0 ? "x2" : "x1"}, ${info.tydzien <= 8 ? "1 poł." : "2 poł."})`;
+    let wszystkieDnia = baza.plan.filter(z => z.dzien === dWPlanie);
+    let ostateczneZajecia = [];
 
-    let zajeciaDnia = baza.plan.filter(z => z.dzien === info.dzienWPlanie && pasuje(z.tygodnie, info.tydzien));
-    if (!zajeciaDnia.length) { msg.style.display = "block"; msg.innerText = "Nie masz przypisanych zajęć na ten dzień. Looz!"; return; }
+    // Oceniamy każde zajęcia
+    wszystkieDnia.forEach(z => {
+      const naPewnoSieOdbywa = info ? pasuje(z.tygodnie, info.tydzien) : false;
+      if (naPewnoSieOdbywa || pokazWszystkie) {
+        ostateczneZajecia.push({ ...z, naPewnoSieOdbywa });
+      }
+    });
 
-    zajeciaDnia.sort((a, b) => (parseInt(a.od.split(":")[0])*60 + parseInt(a.od.split(":")[1])) - (parseInt(b.od.split(":")[0])*60 + parseInt(b.od.split(":")[1])));
+    if (!ostateczneZajecia.length) { 
+      msg.style.display = "block"; 
+      msg.innerText = pokazWszystkie ? "W ten dzień tygodnia w ogóle nie masz żadnych zajęć w planie." : "Nie masz przypisanych zajęć na ten dzień. Looz!"; 
+      return; 
+    }
+
+    ostateczneZajecia.sort((a, b) => (parseInt(a.od.split(":")[0])*60 + parseInt(a.od.split(":")[1])) - (parseInt(b.od.split(":")[0])*60 + parseInt(b.od.split(":")[1])));
     let koniecPoprzednich = null;
 
-    zajeciaDnia.forEach(z => {
+    ostateczneZajecia.forEach(z => {
       const p = baza.przedmioty[z.id_przedmiotu];
       if (!p) return;
 
       const odMin = parseInt(z.od.split(":")[0])*60 + parseInt(z.od.split(":")[1]);
       const doMin = parseInt(z.do.split(":")[0])*60 + parseInt(z.do.split(":")[1]);
 
-      if (koniecPoprzednich !== null && (odMin - koniecPoprzednich) > 15) {
-        const przerwa = odMin - koniecPoprzednich;
-        kontener.innerHTML += `<div class="okienko">☕ Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
+      // Okienka obliczamy TYLKO między aktywnymi zajęciami
+      if (z.naPewnoSieOdbywa) {
+        if (koniecPoprzednich !== null && (odMin - koniecPoprzednich) > 15) {
+          const przerwa = odMin - koniecPoprzednich;
+          kontener.innerHTML += `<div class="okienko">☕ Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
+        }
+        koniecPoprzednich = doMin;
       }
-      koniecPoprzednich = doMin;
 
       const el = document.createElement(p.link && p.link !== "#" ? "a" : "div");
       if (p.link && p.link !== "#") { el.href = p.link; el.target = "_blank"; }
-      el.className = `card ${(czyToDzisiaj && minutyTeraz >= odMin && minutyTeraz <= doMin) ? "active" : ""}`;
-      el.style.background = p.kolor || "#727272";
-      el.innerHTML = `
-        <div class="przedmiot">${p.nazwa}</div>
-        <div class="wykladowca">${p.wykladowca}</div>
-        <div class="row">
-          <div class="godzina">${z.od.padStart(5, '0')} - ${z.do.padStart(5, '0')}</div>
-          <div class="sala">${p.sala}</div>
-        </div>`;
+      
+      const wyswietlanyCzas = `${z.od.padStart(5, '0')} - ${z.do.padStart(5, '0')}`;
+
+      if (z.naPewnoSieOdbywa) {
+        el.className = `card ${(czyToDzisiaj && minutyTeraz >= odMin && minutyTeraz <= doMin) ? "active" : ""}`;
+        el.style.background = p.kolor || "#727272";
+        el.innerHTML = `
+          <div class="przedmiot">${p.nazwa}</div>
+          <div class="wykladowca">${p.wykladowca}</div>
+          <div class="row">
+            <div class="godzina">${wyswietlanyCzas}</div>
+            <div class="sala">${p.sala}</div>
+          </div>`;
+      } else {
+        // Specjalny wygląd dla "szarych" kart
+        el.className = "card inactive-card";
+        el.innerHTML = `
+          <div class="inactive-badge">W innym tyg. (${z.tygodnie})</div>
+          <div class="przedmiot">${p.nazwa}</div>
+          <div class="wykladowca">${p.wykladowca}</div>
+          <div class="row">
+            <div class="godzina">${wyswietlanyCzas}</div>
+            <div class="sala">${p.sala}</div>
+          </div>`;
+      }
+      
       kontener.appendChild(el);
     });
   }
@@ -240,12 +292,11 @@
   setInterval(() => { if (new Date().toDateString() === dataWysw.toDateString()) render(); }, 60000);
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(()=>{}); 
-    });
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(()=>{}); });
   }
 </script>
 </body>
 </html>
+
 
 
