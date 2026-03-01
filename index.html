@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Plan Zajęć</title>
+<title>Mój Plan Zajęć</title>
 
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2e7d32">
@@ -15,16 +15,21 @@
   .app { width: 100%; max-width: 400px; background: white; min-height: 100vh; padding: 20px; box-sizing: border-box; }
   
   .header { background: rgba(165,165,165,0.2); border-radius: 12px; padding: 10px 5px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
-  .text-center { text-align: center; flex-grow: 1; cursor: pointer; border-radius: 8px; padding: 5px; transition: 0.2s; }
+  .text-center { text-align: center; flex-grow: 1; cursor: pointer; border-radius: 8px; padding: 5px 0; transition: 0.2s; }
   .text-center:hover { background: rgba(0,0,0,0.05); }
   .title { font-size: 26px; margin: 0; color: #000; }
   .date { font-size: 15px; color: #333; margin-top: 4px; font-weight: bold; }
   .week { font-size: 13px; color: #666; margin-top: 4px; }
   
-  .btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 10px 15px; border-radius: 8px; }
+  /* --- Nowa ikonka kalendarza --- */
+  .calendar-icon { margin-top: 6px; color: #888; transition: 0.2s; display: flex; justify-content: center; }
+  .text-center:hover .calendar-icon { color: #2e7d32; transform: scale(1.15); }
+  /* ------------------------------ */
+
+  .btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 10px 15px; border-radius: 8px; transition: 0.2s; }
   .btn:hover { background: rgba(0,0,0,0.1); }
   
-  .card { border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-direction: column; color: white; text-decoration: none; }
+  .card { border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-direction: column; color: white; text-decoration: none; transition: 0.3s; }
   .card.active { outline: 4px solid #2e7d32; box-shadow: 0 0 20px rgba(46,125,50,0.6); transform: scale(1.02); }
   .przedmiot { text-align: center; font-size: 28px; line-height: 1.2; font-weight: bold; }
   .wykladowca { text-align: center; font-size: 16px; opacity: 0.9; margin: 4px 0 16px; }
@@ -50,12 +55,21 @@
 <div class="app">
   <div class="header">
     <button class="btn" id="prev">❮</button>
-    <div class="text-center" id="open-modal">
+    
+    <div class="text-center" id="open-modal" title="Pokaż rozpiskę semestru">
       <h1 class="title" id="tytul"></h1>
       <div class="date" id="data"></div>
       <div class="week" id="info"></div>
-      <div style="font-size: 10px; color: #aaa; margin-top: 3px;">(Kliknij po kalendarz)</div>
+      <div class="calendar-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </div>
     </div>
+    
     <button class="btn" id="next">❯</button>
   </div>
   <div id="plan-container"></div>
@@ -96,7 +110,6 @@
     tydz.forEach((data, i) => kalendarzMap[data] = { dzienWPlanie: i + 1, tydzien: index + 1 });
   });
 
-  // Naprawiony filtr (odróżnia ścisłe numery od tekstu "1 połowa")
   function pasuje(zapis, aktTyg) {
     if (!zapis || zapis === "oba") return true;
     
@@ -177,7 +190,7 @@
     if (!info) {
       document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
       document.getElementById("info").innerText = "Brak zajęć dydaktycznych";
-      msg.style.display = "block"; msg.innerText = "Brak zajęć"; return;
+      msg.style.display = "block"; msg.innerText = "Idź odpocząć, brak zajęć w ten dzień! 🎉"; return;
     }
 
     const prawdziweDzisiaj = new Date();
@@ -226,12 +239,13 @@
   start();
   setInterval(() => { if (new Date().toDateString() === dataWysw.toDateString()) render(); }, 60000);
 
-  // Rejestracja Service Workera dla PWA (Offline & Instalacja)
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js').catch(()=>{}); // Ukryte wyłapywanie błędu, jeśli plik sw.js jeszcze nie istnieje
+      navigator.serviceWorker.register('sw.js').catch(()=>{}); 
     });
   }
 </script>
 </body>
 </html>
+
+
