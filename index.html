@@ -35,7 +35,7 @@
   .okienko { text-align: center; padding: 10px; margin-bottom: 12px; background: rgba(0,0,0,0.03); border-radius: 8px; color: #555; font-size: 14px; font-weight: bold; border: 2px dashed #bbb; }
   .msg { text-align: center; font-size: 18px; color: #727272; margin-top: 50px; display: none; }
 
-  /* --- STYLE DLA WYSKAKUJĄCEGO OKIENKA (MODAL) --- */
+  /* Wyskakujące okienko (Modal) */
   .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
   .modal-content { background: white; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; max-height: 85vh; overflow-y: auto; position: relative; box-sizing: border-box; }
   .close { position: absolute; right: 15px; top: 10px; font-size: 32px; cursor: pointer; color: #555; line-height: 1; }
@@ -66,6 +66,7 @@
   <div class="modal-content">
     <span class="close" id="close-modal">&times;</span>
     <h2 style="margin: 0 0 5px 0; font-size: 20px;">Rozpiska Semestru</h2>
+    <p style="margin: 0 0 10px 0; font-size: 12px; color: #666;">(Terminy ułożone według dni z planu zajęć)</p>
     <div style="overflow-x: auto;">
       <table id="tabela-tygodni"></table>
     </div>
@@ -79,7 +80,6 @@
   const nazwyDni = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
   const miesiace = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
   
-  // Rozpiska z Twojego zdjęcia
   const tygodnieDane = [
     ["02.03","03.03","04.03","05.03","06.03"], ["09.03","10.03","11.03","12.03","13.03"],
     ["16.03","17.03","18.03","19.03","20.03"], ["23.03","24.03","25.03","26.03","27.03"],
@@ -96,34 +96,42 @@
     tydz.forEach((data, i) => kalendarzMap[data] = { dzienWPlanie: i + 1, tydzien: index + 1 });
   });
 
-  // DO TESTÓW (Zostawiłem na dzisiaj):
-  kalendarzMap["27.02"] = { dzienWPlanie: 5, tydzien: 1 };
-
-  // Filtr tygodni
+  // Naprawiony filtr (odróżnia ścisłe numery od tekstu "1 połowa")
   function pasuje(zapis, aktTyg) {
     if (!zapis || zapis === "oba") return true;
-    const z = zapis.toLowerCase();
     
-    const liczby = z.match(/\d+(-\d+)?/g);
-    if (liczby && !liczby.some(zakres => {
-      const [start, end] = zakres.split('-').map(Number);
-      return end ? (aktTyg >= start && aktTyg <= end) : (aktTyg === start);
-    })) return false;
+    const fragmenty = zapis.toLowerCase().split(',').map(s => s.trim());
+    let maZakresy = false;
+    let pasujeZakres = false;
     
-    if (z.includes("x1") && aktTyg % 2 === 0) return false;
-    if (z.includes("x2") && aktTyg % 2 !== 0) return false;
-    if ((z.includes("1 polowa") || z.includes("1 połowa")) && aktTyg > 8) return false;
-    if ((z.includes("2 polowa") || z.includes("2 połowa")) && aktTyg < 9) return false;
+    for (const frag of fragmenty) {
+      if (/^\d+(-\d+)?$/.test(frag)) { 
+        maZakresy = true;
+        const [start, end] = frag.split('-').map(Number);
+        if (end ? (aktTyg >= start && aktTyg <= end) : (aktTyg === start)) {
+          pasujeZakres = true;
+        }
+      }
+    }
+    
+    if (maZakresy && !pasujeZakres) return false;
+    
+    for (const frag of fragmenty) {
+      if ((frag === "x1" || frag === "nieparzyste") && aktTyg % 2 === 0) return false;
+      if ((frag === "x2" || frag === "parzyste" || frag === "pażyste") && aktTyg % 2 !== 0) return false;
+      if ((frag === "1 polowa" || frag === "1 połowa") && aktTyg > 8) return false;
+      if ((frag === "2 polowa" || frag === "2 połowa") && aktTyg < 9) return false;
+    }
     
     return true; 
   }
 
-  // --- LOGIKA OKIENKA (MODAL) ---
+  // Obsługa modala
   const modal = document.getElementById("modal");
   document.getElementById("open-modal").onclick = () => {
     modal.style.display = "flex";
     const tab = document.getElementById("tabela-tygodni");
-    if (!tab.innerHTML) { // Rysuj tabelę tylko raz
+    if (!tab.innerHTML) {
       let html = "<tr><th>Tyg</th><th>Pon</th><th>Wt</th><th>Śr</th><th>Czw</th><th>Pt</th></tr>";
       tygodnieDane.forEach((tydz, i) => {
         const t = i + 1;
@@ -140,7 +148,6 @@
   };
   document.getElementById("close-modal").onclick = () => modal.style.display = "none";
   window.onclick = (e) => { if (e.target === modal) modal.style.display = "none"; };
-  // ------------------------------
 
   // Nawigacja
   document.getElementById("prev").onclick = () => { dataWysw.setDate(dataWysw.getDate() - 1); render(); };
@@ -153,7 +160,7 @@
       render();
     } catch {
       const msg = document.getElementById("komunikat");
-      msg.style.display = "block"; msg.innerText = "Błąd pobierania planu.";
+      msg.style.display = "block"; msg.innerText = "Błąd pobierania planu. Sprawdź plik JSON.";
     }
   }
 
@@ -170,7 +177,7 @@
     if (!info) {
       document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
       document.getElementById("info").innerText = "Brak zajęć dydaktycznych";
-      msg.style.display = "block"; msg.innerText = "Brak zajęć!"; return;
+      msg.style.display = "block"; msg.innerText = "Brak zajęć"; return;
     }
 
     const prawdziweDzisiaj = new Date();
@@ -183,7 +190,7 @@
     document.getElementById("info").innerText = `Tyg: ${info.tydzien}/15 (${info.tydzien % 2 === 0 ? "x2" : "x1"}, ${info.tydzien <= 8 ? "1 poł." : "2 poł."})`;
 
     let zajeciaDnia = baza.plan.filter(z => z.dzien === info.dzienWPlanie && pasuje(z.tygodnie, info.tydzien));
-    if (!zajeciaDnia.length) { msg.style.display = "block"; msg.innerText = "Brak zajęć!"; return; }
+    if (!zajeciaDnia.length) { msg.style.display = "block"; msg.innerText = "Nie masz przypisanych zajęć na ten dzień. Looz!"; return; }
 
     zajeciaDnia.sort((a, b) => (parseInt(a.od.split(":")[0])*60 + parseInt(a.od.split(":")[1])) - (parseInt(b.od.split(":")[0])*60 + parseInt(b.od.split(":")[1])));
     let koniecPoprzednich = null;
@@ -197,7 +204,7 @@
 
       if (koniecPoprzednich !== null && (odMin - koniecPoprzednich) > 15) {
         const przerwa = odMin - koniecPoprzednich;
-        kontener.innerHTML += `<div class="okienko"> Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
+        kontener.innerHTML += `<div class="okienko">☕ Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
       }
       koniecPoprzednich = doMin;
 
@@ -218,16 +225,13 @@
 
   start();
   setInterval(() => { if (new Date().toDateString() === dataWysw.toDateString()) render(); }, 60000);
-</script>
 
-<script>
+  // Rejestracja Service Workera dla PWA (Offline & Instalacja)
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.register('sw.js').catch(()=>{}); // Ukryte wyłapywanie błędu, jeśli plik sw.js jeszcze nie istnieje
     });
   }
 </script>
-
 </body>
-
 </html>
