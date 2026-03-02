@@ -208,6 +208,7 @@
       "do": "10:00",
       "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_w"
     },
+    
     {
       "dzien": 2,
       "tygodnie": "oba",
@@ -215,6 +216,7 @@
       "do": "12:00",
       "id_przedmiotu": "Angielki"
     },
+    
     {
     "dzien": 2,
       "tygodnie": "x2",
@@ -238,6 +240,8 @@
       "do": "18:00",
       "id_przedmiotu": "Fizyka_l"
     },
+
+
     
 
     {
@@ -338,4 +342,5 @@
   ]
 
 }
+
 
