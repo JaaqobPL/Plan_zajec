@@ -149,7 +149,6 @@
   <div class="modal-content">
     <span class="close" id="close-modal">&times;</span>
     <h2 style="margin: 0 0 5px 0; font-size: 20px; color: var(--text-main);">Rozpiska Semestru</h2>
-    <p style="margin: 0 0 10px 0; font-size: 12px; color: var(--text-muted);">Terminy ułożone według dni z planu zajęć</p>
     <div style="overflow-x: auto;">
       <table id="tabela-tygodni"></table>
     </div>
@@ -256,7 +255,7 @@
     if (!info && !pokazWszystkie) {
       document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
       document.getElementById("info").innerText = "Brak zajęć dydaktycznych";
-      msg.style.display = "block"; msg.innerText = "Idź odpocząć, brak zajęć w ten dzień! 🎉"; 
+      msg.style.display = "block"; msg.innerText = "Brak zajęć"; 
       return;
     }
 
@@ -284,7 +283,7 @@
 
     if (!ostateczneZajecia.length) { 
       msg.style.display = "block"; 
-      msg.innerText = pokazWszystkie ? "W ten dzień tygodnia w ogóle nie masz żadnych zajęć w planie." : "Nie masz przypisanych zajęć na ten dzień. Looz!"; 
+      msg.innerText = pokazWszystkie ? "W ten dzień tygodnia w ogóle nie masz żadnych zajęć w planie." : "Nie masz przypisanych zajęć na ten dzień."; 
       return; 
     }
 
@@ -357,3 +356,4 @@
 </script>
 </body>
 </html>
+
