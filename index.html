@@ -3,86 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mój Plan Zajęć</title>
+<title>Plan zajęć 2M4</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2e7d32">
+<meta name="theme-color" content="#222222">
 <link rel="apple-touch-icon" href="icon-192.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Space Grotesk', sans-serif; background: #e0e0e0; margin: 0; display: flex; justify-content: center; }
-  .app { width: 100%; max-width: 400px; background: white; min-height: 100vh; padding: 20px; box-sizing: border-box; }
-  
-  .header { background: rgba(165,165,165,0.2); border-radius: 12px; padding: 10px 5px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
-  .text-center { text-align: center; flex-grow: 1; padding: 5px 0; }
-  .title { font-size: 26px; margin: 0; color: #000; }
-  .date { font-size: 15px; color: #333; margin-top: 4px; font-weight: bold; }
-  .week { font-size: 13px; color: #666; margin-top: 4px; }
-  
-  /* --- Nowy panel ikonek --- */
-  .icons-row { display: flex; justify-content: center; gap: 15px; margin-top: 10px; }
-  .icon-action { color: #888; cursor: pointer; transition: 0.2s; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-  .icon-action:hover { background: rgba(0,0,0,0.05); color: #2e7d32; }
-  .icon-active { color: #2e7d32; background: rgba(46,125,50,0.1); }
-  /* ------------------------- */
+  :root {
+    --bg-main: #222222;
+    --bg-card: #373737;
+    --bg-inactive: rgba(55, 55, 55, 0.3);
+    --text-main: #F4EDE4;
+    --text-muted: rgba(244, 237, 228, 0.7);
+    --text-inactive: rgba(244, 237, 228, 0.3);
+    --accent-red: #D7263D;
+    --divider: #5B5B5B;
+  }
 
-  .btn { background: none; border: none; font-size: 22px; cursor: pointer; padding: 10px 15px; border-radius: 8px; transition: 0.2s; }
-  .btn:hover { background: rgba(0,0,0,0.1); }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg-main); margin: 0; display: flex; justify-content: center; color: var(--text-main); }
+  .app { width: 100%; max-width: 400px; min-height: 100vh; padding: 20px 15px; box-sizing: border-box; }
   
-  .card { border-radius: 16px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-direction: column; color: white; text-decoration: none; transition: 0.3s; }
-  .card.active { outline: 4px solid #2e7d32; box-shadow: 0 0 20px rgba(46,125,50,0.6); transform: scale(1.02); }
+  /* Górny pasek z Twojego designu */
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; margin-top: 5px; }
+  .brand { font-size: 25px; font-weight: 600; letter-spacing: 0.5px; }
+  .action-icons { display: flex; gap: 12px; }
   
-  /* --- Wygląd szarych kart (duchów) --- */
-  .inactive-card { background: #555 !important; opacity: 0.65; border: 2px dashed #999; filter: grayscale(80%); box-shadow: none !important; transform: none !important; }
-  .inactive-badge { font-size: 11px; color: #ddd; text-align: center; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
-  /* ------------------------------------ */
+  .icon-btn { 
+    border-radius: 16px; width: 42px; height: 42px; border: none;
+    display: flex; justify-content: center; align-items: center; cursor: pointer; 
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25); transition: 0.2s; color: var(--text-main);
+  }
+  .icon-btn:active { transform: scale(0.9); }
+  
+  #toggle-all { background: var(--bg-card); }
+  #toggle-all.icon-active { background: #555; box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); }
+  #open-modal { background: var(--accent-red); }
 
-  .przedmiot { text-align: center; font-size: 28px; line-height: 1.2; font-weight: bold; }
-  .wykladowca { text-align: center; font-size: 16px; opacity: 0.9; margin: 4px 0 16px; }
+  /* Nawigacja Dni */
+  .header { 
+    background: var(--bg-card); border-radius: 16px; padding: 10px 15px; 
+    margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+  }
+  .text-center { text-align: center; flex-grow: 1; }
+  .title { font-size: 26px; margin: 0; font-weight: 400; }
+  .date { font-size: 15px; color: var(--text-muted); margin-top: 2px; }
+  .week { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+  
+  .btn { background: none; border: none; cursor: pointer; padding: 5px 10px; transition: 0.2s; color: var(--text-main); display: flex; align-items: center; }
+  .btn:active { transform: scale(0.8); }
+  
+  /* Linia oddzielająca z designu */
+  .divider { border-top: 1px solid var(--divider); margin-bottom: 25px; opacity: 0.8; }
+  
+  /* Karty zajęć */
+  .card { 
+    background: var(--bg-card); border-radius: 16px; 
+    padding: 15px 15px 12px 15px; margin-bottom: 15px; display: flex; flex-direction: column; 
+    text-decoration: none; color: var(--text-main); position: relative;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+    border-left: 7px solid var(--accent-red); /* Domyślny czerwony z designu, zmieniany w JS */
+  }
+  
+  .card-title { text-align: center; font-size: 24px; line-height: 1.2; margin-bottom: 4px; }
+  .card-prof { text-align: center; font-size: 14px; color: var(--text-main); margin-bottom: 18px; }
   .row { display: flex; justify-content: space-between; align-items: flex-end; }
-  .godzina { font-size: 21px; }
-  .sala { font-size: 31px; line-height: 0.9; }
+  .godzina { font-size: 18px; }
+  .sala { font-size: 24px; line-height: 0.9; }
   
-  .okienko { text-align: center; padding: 10px; margin-bottom: 12px; background: rgba(0,0,0,0.03); border-radius: 8px; color: #555; font-size: 14px; font-weight: bold; border: 2px dashed #bbb; }
-  .msg { text-align: center; font-size: 18px; color: #727272; margin-top: 50px; display: none; }
+  /* Karta nieaktywna (Duch) */
+  .inactive-card { 
+    background: var(--bg-inactive) !important; 
+    border-left: 7px solid var(--text-inactive) !important; 
+    box-shadow: 0 4px 4px rgba(0,0,0,0.25) !important;
+  }
+  .inactive-card * { color: var(--text-inactive) !important; }
+  .inactive-badge { font-size: 10px; text-align: center; margin-bottom: 5px; letter-spacing: 1px; }
 
-  .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
-  .modal-content { background: white; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; max-height: 85vh; overflow-y: auto; position: relative; box-sizing: border-box; }
-  .close { position: absolute; right: 15px; top: 10px; font-size: 32px; cursor: pointer; color: #555; line-height: 1; }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; text-align: center; }
-  th, td { border: 1px solid #ddd; padding: 6px 2px; }
-  th { background: #f0f0f0; }
-  .t-x1 { background: #fff; }
-  .t-x2 { background: #f4f4f4; }
+  /* Okienko */
+  .okienko { 
+    text-align: center; padding: 10px; margin-bottom: 15px; 
+    background: var(--bg-inactive); border-radius: 16px; 
+    color: var(--text-main); font-size: 20px; box-shadow: 0 4px 4px rgba(0,0,0,0.25);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .okienko-czas { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  
+  .msg { text-align: center; font-size: 18px; color: var(--text-muted); margin-top: 50px; display: none; }
+
+  /* Modal (Rozpiska) */
+  .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+  .modal-content { background: var(--bg-main); border: 1px solid var(--bg-card); padding: 20px; border-radius: 16px; width: 95%; max-width: 400px; max-height: 85vh; overflow-y: auto; position: relative; box-sizing: border-box; }
+  .close { position: absolute; right: 15px; top: 10px; font-size: 32px; cursor: pointer; color: var(--text-muted); line-height: 1; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; text-align: center; color: var(--text-main); }
+  th, td { border: 1px solid var(--divider); padding: 8px 2px; }
+  th { background: var(--bg-card); font-weight: bold; }
+  .t-x1 { background: var(--bg-main); }
+  .t-x2 { background: var(--bg-inactive); }
 </style>
 </head>
 <body>
 <div class="app">
+  
+  <div class="top-bar">
+    <div class="brand">Plan zajęć 2M4</div>
+    <div class="action-icons">
+      <button class="icon-btn" id="toggle-all" title="Pokaż/ukryj resztę zajęć">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+      </button>
+      <button class="icon-btn" id="open-modal" title="Rozpiska semestru">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   <div class="header">
-    <button class="btn" id="prev">❮</button>
+    <button class="btn" id="prev">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
     <div class="text-center">
       <h1 class="title" id="tytul"></h1>
       <div class="date" id="data"></div>
       <div class="week" id="info"></div>
-      
-      <div class="icons-row">
-        <div class="icon-action" id="open-modal" title="Pokaż rozpiskę semestru">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-        </div>
-        <div class="icon-action" id="toggle-all" title="Pokaż wszystkie zajęcia przypisane do tego dnia">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-        </div>
-      </div>
     </div>
-    <button class="btn" id="next">❯</button>
+    <button class="btn" id="next">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
   </div>
+  
+  <div class="divider"></div>
+  
   <div id="plan-container"></div>
   <div id="komunikat" class="msg"></div>
 </div>
@@ -90,8 +148,8 @@
 <div id="modal" class="modal">
   <div class="modal-content">
     <span class="close" id="close-modal">&times;</span>
-    <h2 style="margin: 0 0 5px 0; font-size: 20px;">Rozpiska Semestru</h2>
-    <p style="margin: 0 0 10px 0; font-size: 12px; color: #666;">(Terminy ułożone według dni z planu zajęć)</p>
+    <h2 style="margin: 0 0 5px 0; font-size: 20px; color: var(--text-main);">Rozpiska Semestru</h2>
+    <p style="margin: 0 0 10px 0; font-size: 12px; color: var(--text-muted);">Terminy ułożone według dni z planu zajęć</p>
     <div style="overflow-x: auto;">
       <table id="tabela-tygodni"></table>
     </div>
@@ -101,7 +159,7 @@
 <script>
   let baza = null; 
   let dataWysw = new Date();
-  let pokazWszystkie = false; // Zmienna pamiętająca czy kliknięto oko
+  let pokazWszystkie = false;
   
   const nazwyDni = ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"];
   const miesiace = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
@@ -143,7 +201,6 @@
     return true; 
   }
 
-  // Aktywacja Oka
   document.getElementById("toggle-all").onclick = () => {
     pokazWszystkie = !pokazWszystkie;
     document.getElementById("toggle-all").classList.toggle("icon-active", pokazWszystkie);
@@ -162,7 +219,7 @@
         const polowa = t <= 8 ? "1 poł." : "2 poł.";
         const typ = t % 2 === 0 ? "x2" : "x1";
         html += `<tr class="${klasa}">
-          <td><b>t${t}</b><br><small style="color:#555">${typ}</small><br><small style="color:#777">${polowa}</small></td>
+          <td><b>t${t}</b><br><small style="color:var(--text-muted)">${typ}</small><br><small style="color:var(--text-muted)">${polowa}</small></td>
           <td>${tydz[0]}</td><td>${tydz[1]}</td><td>${tydz[2]}</td><td>${tydz[3]}</td><td>${tydz[4]}</td>
         </tr>`;
       });
@@ -196,7 +253,6 @@
     const dzisiajStr = `${String(dataWysw.getDate()).padStart(2,'0')}.${String(dataWysw.getMonth()+1).padStart(2,'0')}`;
     const info = kalendarzMap[dzisiajStr];
     
-    // Jeśli dzień wolny i NIE kliknęliśmy oka
     if (!info && !pokazWszystkie) {
       document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
       document.getElementById("info").innerText = "Brak zajęć dydaktycznych";
@@ -209,21 +265,16 @@
     if (info) {
       const nazwaPrawdziwa = nazwyDni[dataWysw.getDay()];
       const nazwaZPlanu = nazwyDni[info.dzienWPlanie];
-      document.getElementById("tytul").innerText = nazwaPrawdziwa !== nazwaZPlanu ? `${nazwaPrawdziwa} (jako: ${nazwaZPlanu})` : nazwaZPlanu;
-      document.getElementById("info").innerText = `Tyg: ${info.tydzien}/15 (${info.tydzien % 2 === 0 ? "x2" : "x1"}, ${info.tydzien <= 8 ? "1 poł." : "2 poł."})`;
+      document.getElementById("tytul").innerText = nazwaPrawdziwa !== nazwaZPlanu ? `${nazwaPrawdziwa} (${nazwaZPlanu})` : nazwaZPlanu;
+      document.getElementById("info").innerText = `Tydzień: ${info.tydzien}/15 (${info.tydzien % 2 === 0 ? "x2" : "x1"}, ${info.tydzien <= 8 ? "1 połowa" : "2 połowa"})`;
     } else {
       document.getElementById("tytul").innerText = nazwyDni[dataWysw.getDay()];
       document.getElementById("info").innerText = "Pokazuję opcje dla tego dnia tyg.";
     }
 
-    const prawdziweDzisiaj = new Date();
-    const czyToDzisiaj = prawdziweDzisiaj.toDateString() === dataWysw.toDateString();
-    const minutyTeraz = prawdziweDzisiaj.getHours() * 60 + prawdziweDzisiaj.getMinutes();
-
     let wszystkieDnia = baza.plan.filter(z => z.dzien === dWPlanie);
     let ostateczneZajecia = [];
 
-    // Oceniamy każde zajęcia
     wszystkieDnia.forEach(z => {
       const naPewnoSieOdbywa = info ? pasuje(z.tygodnie, info.tydzien) : false;
       if (naPewnoSieOdbywa || pokazWszystkie) {
@@ -247,11 +298,20 @@
       const odMin = parseInt(z.od.split(":")[0])*60 + parseInt(z.od.split(":")[1]);
       const doMin = parseInt(z.do.split(":")[0])*60 + parseInt(z.do.split(":")[1]);
 
-      // Okienka obliczamy TYLKO między aktywnymi zajęciami
       if (z.naPewnoSieOdbywa) {
         if (koniecPoprzednich !== null && (odMin - koniecPoprzednich) > 15) {
           const przerwa = odMin - koniecPoprzednich;
-          kontener.innerHTML += `<div class="okienko">☕ Okienko: ${Math.floor(przerwa/60) ? Math.floor(przerwa/60)+'h ' : ''}${przerwa%60}min</div>`;
+          const godz = Math.floor(przerwa/60);
+          const min = przerwa%60;
+          let czasTekst = "";
+          if(godz > 0) czasTekst += `${godz}h `;
+          if(min > 0) czasTekst += `${min}min`;
+          
+          kontener.innerHTML += `
+            <div class="okienko">
+              Okienko
+              <div class="okienko-czas">${czasTekst}</div>
+            </div>`;
         }
         koniecPoprzednich = doMin;
       }
@@ -260,24 +320,24 @@
       if (p.link && p.link !== "#") { el.href = p.link; el.target = "_blank"; }
       
       const wyswietlanyCzas = `${z.od.padStart(5, '0')} - ${z.do.padStart(5, '0')}`;
+      const accentColor = p.kolor || "#D7263D"; // Używa koloru z JSONa lub domyślnego czerwonego
 
       if (z.naPewnoSieOdbywa) {
-        el.className = `card ${(czyToDzisiaj && minutyTeraz >= odMin && minutyTeraz <= doMin) ? "active" : ""}`;
-        el.style.background = p.kolor || "#727272";
+        el.className = "card";
+        el.style.borderLeftColor = accentColor;
         el.innerHTML = `
-          <div class="przedmiot">${p.nazwa}</div>
-          <div class="wykladowca">${p.wykladowca}</div>
+          <div class="card-title">${p.nazwa}</div>
+          <div class="card-prof">${p.wykladowca}</div>
           <div class="row">
             <div class="godzina">${wyswietlanyCzas}</div>
             <div class="sala">${p.sala}</div>
           </div>`;
       } else {
-        // Specjalny wygląd dla "szarych" kart
         el.className = "card inactive-card";
         el.innerHTML = `
-          <div class="inactive-badge">W innym tyg. (${z.tygodnie})</div>
-          <div class="przedmiot">${p.nazwa}</div>
-          <div class="wykladowca">${p.wykladowca}</div>
+          <div class="inactive-badge">W INNYM TYGODNIU (${z.tygodnie})</div>
+          <div class="card-title">${p.nazwa}</div>
+          <div class="card-prof">${p.wykladowca}</div>
           <div class="row">
             <div class="godzina">${wyswietlanyCzas}</div>
             <div class="sala">${p.sala}</div>
@@ -297,6 +357,3 @@
 </script>
 </body>
 </html>
-
-
-
