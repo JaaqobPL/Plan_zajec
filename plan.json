@@ -5,7 +5,7 @@
       "nazwa": "Ćw. Matematyka",
       "wykladowca": "(dr. inż.) Gertruda Gwóźdź",
       "sala": "E105",
-      "kolor": "#2563eb", 
+      "kolor": "#D7263D", 
       "link": "#"
     },
 
@@ -13,7 +13,7 @@
       "nazwa": "Ćw. Matematyka",
       "wykladowca": "(dr. inż.) Gertruda Gwóźdź",
       "sala": "E103",
-      "kolor": "#2563eb", 
+      "kolor": "#D7263D", 
       "link": "#"
     },
 
@@ -21,7 +21,7 @@
       "nazwa": "W. Matematyka",
       "wykladowca": "(dr. inż.) Gertruda Gwóźdź",
       "sala": "E5",
-      "kolor": "#dc2626",
+      "kolor": "#D7263D",
       "link": "#"
     },
     
@@ -29,7 +29,7 @@
       "nazwa": "L. Elektronika",
       "wykladowca": "(dr. inż.) M Jankowski",
       "sala": "k22 B18 l.c",
-      "kolor": "#b91c1c",
+      "kolor": "#43AA8B",
       "link": "#"
     },
 
@@ -37,7 +37,7 @@
       "nazwa": "L. Elektronika",
       "wykladowca": "(Mgr. inż.) P Niedzielski",
       "sala": "k23 C3 309 enika",
-      "kolor": "#b91c1c",
+      "kolor": "#43AA8B",
       "link": "#"
     },
 
@@ -45,7 +45,7 @@
       "nazwa": "W. Elektronika",
       "wykladowca": "(dr. inż.) T Widerski",
       "sala": "E5",
-      "kolor": "#b91c1c",
+      "kolor": "#43AA8B",
       "link": "#"
     },
 
@@ -53,7 +53,7 @@
       "nazwa": "L. Elektrotechnika",
       "wykladowca": "(dr. inż.) E Stano",
       "sala": "i25 ZPiKE 1",
-      "kolor": "#b91c1c",
+      "kolor": "#8963BA",
       "link": "#"
     },
 
@@ -61,7 +61,7 @@
       "nazwa": "Ćw. Elektrotechnika",
       "wykladowca": "(Prof. dr.) E Leśniewska-Komęza",
       "sala": "E104",
-      "kolor": "#b91c1c",
+      "kolor": "#8963BA",
       "link": "#"
     },
 
@@ -69,7 +69,7 @@
       "nazwa": "W. Elektrotechnika",
       "wykladowca": "(Prof. dr.) E Leśniewska-Komęza",
       "sala": "E5",
-      "kolor": "#b91c1c",
+      "kolor": "#8963BA",
       "link": "#"
     },
 
@@ -77,7 +77,7 @@
       "nazwa": "L. Fizyka",
       "wykladowca": "(dr. inż.) Krystyna Wolf",
       "sala": "A3 S9",
-      "kolor": "#b91c1c",
+      "kolor": "#2A9D8F",
       "link": "#"
     },
 
@@ -85,7 +85,7 @@
       "nazwa": "Ćw. Wytrzymałość materiałów",
       "wykladowca": "(dr. inż.) Jacek Jankowski",
       "sala": "E104",
-      "kolor": "#b91c1c",
+      "kolor": "#E56B2E",
       "link": "#"
     },
 
@@ -93,7 +93,7 @@
       "nazwa": "W. Wytrzymałość materiałów",
       "wykladowca": "(Prof. dr.) M Kotełko",
       "sala": "E5",
-      "kolor": "#b91c1c",
+      "kolor": "#E56B2E",
       "link": "#"
     },
 
@@ -101,7 +101,7 @@
       "nazwa": "W. Inżynieria wytwarzania w elektronice",
       "wykladowca": "(dr. inż.) A Kubiak",
       "sala": "i23 416",
-      "kolor": "#b91c1c",
+      "kolor": "#E9B44C",
       "link": "#"
     },
 
@@ -109,7 +109,7 @@
       "nazwa": "L. Inżynieria wytwarzania w elektronice",
       "wykladowca": "(dr. inż.) Łukasz Ruta",
       "sala": "k23 E7L",
-      "kolor": "#b91c1c",
+      "kolor": "#E9B44C",
       "link": "#"
     },
 
@@ -117,7 +117,7 @@
       "nazwa": "Lek. J. Angielski",
       "wykladowca": "(dr. inż.)",
       "sala": "B24",
-      "kolor": "#2563eb",
+      "kolor": "#D44D87",
       "link": "#"
     },
 
@@ -125,7 +125,7 @@
       "nazwa": "WF",
       "wykladowca": "(dr. inż.)",
       "sala": "S3",
-      "kolor": "#b91c1c",
+      "kolor": "#2A9D8F",
       "link": "#"
     },
 
@@ -133,7 +133,7 @@
       "nazwa": "L. Technologie informatyczne",
       "wykladowca": "(dr. inż.) N Bokla",
       "sala": "k23 C3 301 PC",
-      "kolor": "#b91c1c",
+      "kolor": "#277DA1",
       "link": "#"
     },
 
@@ -141,7 +141,7 @@
       "nazwa": "L. Technologie informatyczne",
       "wykladowca": "(dr. inż.) M Ludwicki",
       "sala": "m A22b 2M135",
-      "kolor": "#b91c1c",
+      "kolor": "#277DA1",
       "link": "#"
     },
 
@@ -149,7 +149,7 @@
       "nazwa": "e_ler. Technologie informatyczne",
       "wykladowca": "(dr.) M Kacperski",
       "sala": "e_lerning",
-      "kolor": "#b91c1c",
+      "kolor": "#277DA1",
       "link": "#"
     }
   },
@@ -215,6 +215,13 @@
       "do": "12:00",
       "id_przedmiotu": "Angielki"
     },
+    {
+    "dzien": 2,
+      "tygodnie": "x2",
+      "od": "12:15",
+      "do": "14:00",
+      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_l"
+    },
 
     {
       "dzien": 2,
@@ -267,13 +274,8 @@
 
 
 
-    {
-      "dzien": 4,
-      "tygodnie": "x2",
-      "od": "08:15",
-      "do": "10:00",
-      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_l"
-    },
+    
+      
 
     {
       "dzien": 4,
@@ -336,3 +338,4 @@
   ]
 
 }
+
