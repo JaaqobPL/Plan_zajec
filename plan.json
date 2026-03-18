@@ -217,13 +217,6 @@
       "id_przedmiotu": "Angielki"
     },
     
-    {
-    "dzien": 2,
-      "tygodnie": "x1",
-      "od": "12:15",
-      "do": "14:00",
-      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_l"
-    },
 
     {
       "dzien": 2,
@@ -274,17 +267,7 @@
       "od": "14:15",
       "do": "16:00",
       "id_przedmiotu": "matematyka_c2"
-    },
-
-
     
-
-    {
-    "dzien": 4,
-      "tygodnie": "x2",
-      "od": "08:15",
-      "do": "10:00",
-      "id_przedmiotu": "Inżynieria_wytwarzania_w_elektronice_l"
     },
       
 
